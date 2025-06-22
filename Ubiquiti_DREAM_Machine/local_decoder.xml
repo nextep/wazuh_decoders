@@ -1,0 +1,92 @@
+<!-- Ubiquiti Dream Machine Decoders 
+	 Author: Elias Ibrahim
+-->
+<decoder name="ubiquiti-crond">
+  <program_name>^crond$</program_name>
+</decoder>
+<decoder name="ubiquiti-dbus">
+  <program_name>^dbus-daemon$</program_name>
+</decoder>
+<decoder name="ubiquiti-dnsmasq">
+  <program_name>^dnsmasq$</program_name>
+</decoder>
+<decoder name="ubiquiti-dnsmasq-dhcp">
+  <program_name>^dnsmasq-dhcp$</program_name>
+</decoder>
+<decoder name="ubiquiti-dpi-flow-stats">
+  <program_name>^dpi-flow-stats$</program_name>
+</decoder>
+<decoder name="ubiquiti-earlyoom">
+  <program_name>^earlyoom$</program_name>
+</decoder>
+<decoder name="ubiquiti-flow-stats-gen">
+  <program_name>^flow-stats-gen$</program_name>
+</decoder>
+<decoder name="ubiquiti-hostapd">
+  <program_name>^hostapd$</program_name>
+</decoder>
+<decoder name="ubiquiti-init">
+  <program_name>^init$</program_name>
+</decoder>
+<decoder name="ubiquiti-kernel">
+  <program_name>^kernel$</program_name>
+</decoder>
+<decoder name="ubiquiti-mcad">
+  <program_name>^mcad$</program_name>
+</decoder>
+<decoder name="ubiquiti-ntpclient">
+  <program_name>^ntpclient$</program_name>
+</decoder>
+<decoder name="ubiquiti-ntpd">
+  <program_name>^ntpd$</program_name>
+</decoder>
+<decoder name="ubiquiti-odhcp6c">
+  <program_name>^odhcp6c$</program_name>
+</decoder>
+<decoder name="ubiquiti-stahtd">
+  <program_name>^stahtd$</program_name>
+</decoder>
+<decoder name="ubiquiti-sudo">
+  <program_name>^sudo$</program_name>
+</decoder>
+<decoder name="ubiquiti-syslog-ng">
+  <program_name>^syslog-ng$</program_name>
+</decoder>
+<decoder name="ubiquiti-systemd">
+  <program_name>^systemd$</program_name>
+</decoder>
+<decoder name="ubiquiti-udapi">
+  <program_name>^ubios-udapi-server$</program_name>
+</decoder>
+<decoder name="ubiquiti-ulogd">
+  <program_name>^ulogd$</program_name>
+</decoder>
+<decoder name="ubiquiti-wevent">
+  <program_name>^wevent$</program_name>
+</decoder>
+<decoder name="ubiquiti-stahtd-assoc">
+  <parent>ubiquiti-stahtd</parent>
+  <prematch>{"message_type":"STA_ASSOC_TRACK"</prematch>
+  <regex>{"message_type":"(\S+?)","mac":"(\S+?)",.*"ip":"(\S+?)",.*"signal":(\S+?),.*"uptime":(\S+?)}</regex>
+  <order>action, srcmac, srcip, signal, uptime</order>
+</decoder>
+<decoder name="ubiquiti-firewall">
+  <prematch>\p\S+\p\s+DESCR=</prematch>
+  <regex>\p(\S+)\p\s+DESCR="([^"]*)"\s+IN=(\S*)\s+OUT=(\S*)\s+MAC=\S+\s+SRC=(\S+)\s+DST=(\S+)\s+LEN=\S+\s+TOS=\S+\s+PREC=\S+\s+TTL=\S+\s+ID=\S+(?:\s+DF)?\s+PROTO=(\S+)</regex>
+  <order>id, extra_data, iface, dst_iface, srcip, dstip, protocol</order>
+</decoder>
+<decoder name="ubiquiti-firewall-tcpudp">
+  <parent>ubiquiti-firewall</parent>
+  <regex>SPT=(\d+)\s+DPT=(\d+)</regex>
+  <order>srcport, dstport</order>
+</decoder>
+<decoder name="ubiquiti-firewall-icmp">
+  <parent>ubiquiti-firewall</parent>
+  <regex>TYPE=(\d+)\s+CODE=(\d+)</regex>
+  <order>icmp_type, icmp_code</order>
+</decoder>
+<decoder name="ubiquiti-cef">
+  <prematch>CEF:0</prematch>
+  <regex type="pcre2">CEF:0\\|Ubiquiti\\|([^|]*)\\|([^|]*)\\|([^|]*)\\|([^|]*)\\|([^|]*)\\|(.*)$</regex>
+  <order>cef_device_product, cef_device_version, cef_signature_id, cef_name, cef_severity, cef_extension</order>
+</decoder>
